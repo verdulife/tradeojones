@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "$lib": [
+        "src/lib"
+      ],
+      "$lib/*": [
+        "src/lib/*"
+      ],
+      "$content": [
+        "src/content"
+      ],
+      "$content/*": [
+        "src/content/*"
+      ],
+      "$fonts": [
+        "src/fonts"
+      ],
+      "$fonts/*": [
+        "src/fonts/*"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*.d.ts",
+    "src/**/*.js",
+    "src/**/*.svelte"
+  ]
+}
