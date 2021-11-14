@@ -2,13 +2,16 @@
   import { ui } from "$content/add";
 </script>
 
-<button class="out semi">{ui.label}</button>
+<button>{ui.label}</button>
 
 <style lang="scss">
   button {
     width: 75%;
-    color: $sec;
-    border-color: $sec !important;
-    transition: 200ms;
+    background: $sec;
+    color: $white;
+    border-top-left-radius: 18px 15px;
+    border-top-right-radius: 18px 15px;
+    border-bottom-left-radius: 18px 15px;
+    border-bottom-right-radius: 18px 15px;
   }
 </style>

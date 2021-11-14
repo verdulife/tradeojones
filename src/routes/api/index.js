@@ -12,9 +12,24 @@ export async function get() {
     },
   });
 
-  const data = await req.json();
+  const { data } = await req.json();
+
+  let customData = [];
+
+  for (let i = 0; i < data.length; i++) {
+    const item = data[i];
+    const customItem = {
+      img: `https://s2.coinmarketcap.com/static/img/coins/64x64/${item.id}.png`,
+      name: item.name,
+      symbol: item.symbol,
+      price: item.quote.USD.price,
+      amount: 0
+    };
+
+    customData.push(customItem);
+  }
 
   return {
-    body: data,
+    body: customData,
   };
 }

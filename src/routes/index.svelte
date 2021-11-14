@@ -1,53 +1,26 @@
+<script context="module">
+  export async function load({ fetch }) {
+    const req = await fetch("/api");
+
+    if (req.ok) {
+      const res = await req.json();
+
+      return {
+        props: {
+          cryptos: res,
+        },
+      };
+    }
+  }
+</script>
+
 <script>
   import { ui } from "$content/home";
   import Total from "$lib/Total.svelte";
   import Card from "$lib/Card.svelte";
   import Add from "$lib/Add.svelte";
 
-  const cryptos = [
-    {
-      img: "https://www.cryptocompare.com/media/19633/btc.png",
-      name: "Bitcoin",
-      price: 12_000.0,
-      amount: 1_000.0,
-    },
-    {
-      img: "https://www.cryptocompare.com/media/19633/btc.png",
-      name: "Bitcoin",
-      price: 12_000.0,
-      amount: 1_000.0,
-    },
-    {
-      img: "https://www.cryptocompare.com/media/19633/btc.png",
-      name: "Bitcoin",
-      price: 12_000.0,
-      amount: 1_000.0,
-    },
-    {
-      img: "https://www.cryptocompare.com/media/19633/btc.png",
-      name: "Bitcoin",
-      price: 12_000.0,
-      amount: 1_000.0,
-    },
-    {
-      img: "https://www.cryptocompare.com/media/19633/btc.png",
-      name: "Bitcoin",
-      price: 12_000.0,
-      amount: 1_000.0,
-    },
-    {
-      img: "https://www.cryptocompare.com/media/19633/btc.png",
-      name: "Bitcoin",
-      price: 12_000.0,
-      amount: 1_000.0,
-    },
-    {
-      img: "https://www.cryptocompare.com/media/19633/btc.png",
-      name: "Bitcoin",
-      price: 12_000.0,
-      amount: 1_000.0,
-    },
-  ];
+  export let cryptos;
 </script>
 
 <svelte:head>
@@ -56,7 +29,7 @@
 </svelte:head>
 
 <div class="view col fill">
-  <Total amount={1239999} />
+  <Total amount={1200} />
 
   <div class="scroll">
     <ul class="col acenter xfill">
@@ -79,6 +52,9 @@
   }
 
   .add-wrapper {
+    position: fixed;
+    bottom: 0;
+    left: 0;
     padding: 10px 20px;
   }
 </style>

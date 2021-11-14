@@ -1,9 +1,10 @@
 <script>
-  import { currencyFormat } from "$lib/utils";
+  import { currencyFormat, cryptoFormat } from "$lib/utils";
 
   export let data = {
     img: "",
     name: "Shiba Inu",
+    symbol: "$",
     price: 0.000058,
     amount: 2_000_000,
   };
@@ -21,7 +22,7 @@
 
   <div class="col aend grow">
     <p>{currencyFormat(data.price * data.amount, "USD")}</p>
-    <p>{data.amount}</p>
+    <p>{cryptoFormat(data.amount, data.symbol)}</p>
   </div>
 </div>
 

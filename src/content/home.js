@@ -1,4 +1,4 @@
 export const ui = {
-  title: "Hola verdu",
+  title: "TradeoJones™",
   description: "lorem ipsum dolor sit amet, consectetur adipiscing elit."
 }

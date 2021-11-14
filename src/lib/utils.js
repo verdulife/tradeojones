@@ -16,3 +16,7 @@ export function numerationFormat(num, year) {
 export function currencyFormat(num, currency) {
   return num.toLocaleString('en-US', { style: 'currency', currency });
 }
+
+export function cryptoFormat(num, currency) {
+  return num.toLocaleString('en-US', { style: 'decimal' }) + ' ' + currency;
+}
