@@ -19,7 +19,7 @@
   }
 
   main {
-    background: url("../bg.jpg") no-repeat center;
+    background: url("/bg.jpg") no-repeat center;
     background-size: cover;
   }
 

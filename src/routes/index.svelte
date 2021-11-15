@@ -1,26 +1,37 @@
-<script context="module">
-  export async function load({ fetch }) {
-    const req = await fetch("/api");
-
-    if (req.ok) {
-      const res = await req.json();
-
-      return {
-        props: {
-          cryptos: res,
-        },
-      };
-    }
-  }
-</script>
-
 <script>
   import { ui } from "$content/home";
+  import { userData } from "../stores";
   import Total from "$lib/Total.svelte";
   import Card from "$lib/Card.svelte";
   import Add from "$lib/Add.svelte";
+  import { onMount } from "svelte";
 
-  export let cryptos;
+  $: userAssets = $userData;
+
+  async function updateAssetPrice() {
+    const req = await fetch("/api");
+    if (req.ok) {
+      const res = await req.json();
+
+      $userData.forEach((asset) => {
+        const price = res.find((item) => item.symbol === asset.symbol);
+        if (price) asset.price = price.price;
+      });
+    }
+  }
+
+  function sumTotalAmount() {
+    const total = userAssets.reduce((acc, cur) => {
+      return acc + cur.amount * cur.price;
+    }, 0);
+
+    return total;
+  }
+
+  onMount(async () => {
+    await updateAssetPrice();
+    sumTotalAmount();
+  });
 </script>
 
 <svelte:head>
@@ -29,13 +40,13 @@
 </svelte:head>
 
 <div class="view col fill">
-  <Total amount={1200} />
+  <Total amount={sumTotalAmount()} />
 
   <div class="scroll">
     <ul class="col acenter xfill">
-      {#each cryptos as crypto}
+      {#each userAssets as asset}
         <li class="xfill">
-          <Card data={crypto} />
+          <Card data={asset} />
         </li>
       {/each}
     </ul>
@@ -48,13 +59,13 @@
 
 <style lang="scss">
   ul {
-    padding: 10px;
+    padding: 20px 10px 150px 10px;
   }
 
   .add-wrapper {
     position: fixed;
     bottom: 0;
     left: 0;
-    padding: 10px 20px;
+    padding: 20px;
   }
 </style>
