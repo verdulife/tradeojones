@@ -3,10 +3,15 @@
   import { userData } from "../stores";
   import AutoComplete from "simple-svelte-autocomplete";
 
+  export let selectedAsset;
   let modal = false;
   let cryptos = [];
   let asset = {};
   let userAmount = undefined;
+
+  $: if (selectedAsset) {
+    togModal(selectedAsset);
+  }
 
   async function getCryptosList() {
     //todo delete assets that user already have
@@ -14,7 +19,7 @@
     if (req.ok) return await req.json();
   }
 
-  async function togModal() {
+  async function togModal(data) {
     if (modal) {
       modal = false;
       asset = {};
@@ -24,6 +29,17 @@
 
     if (cryptos.length === 0) {
       cryptos = await getCryptosList();
+    }
+
+    if (data) {
+      asset = {
+        img: data.img,
+        name: data.name,
+        symbol: data.symbol,
+        price: data.price,
+      };
+
+      userAmount = data.amount;
     }
 
     modal = true;

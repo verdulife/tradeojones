@@ -1,12 +1,29 @@
 <script>
   import { ui } from "$content/total";
   import { currencyFormat } from "$lib/utils";
+  import { userData } from "../stores";
 
-  export let amount = 0;
+  let totalAmount;
+
+  function sumTotalAmount() {
+    if ($userData.length > 0) {
+      const total = $userData.reduce((acc, cur) => {
+        return acc + cur.amount * cur.price;
+      }, 0);
+
+      return total;
+    }
+
+    return 0;
+  }
+
+  $: if ($userData) {
+    totalAmount = sumTotalAmount();
+  }
 </script>
 
 <header class="col acenter xfill">
-  <h1>{currencyFormat(amount, "USD")}</h1>
+  <h1>{currencyFormat(totalAmount, "USD")}</h1>
 
   <small>{ui.label}</small>
 </header>

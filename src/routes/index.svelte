@@ -4,34 +4,9 @@
   import Total from "$lib/Total.svelte";
   import Card from "$lib/Card.svelte";
   import Add from "$lib/Add.svelte";
-  import { onMount } from "svelte";
 
   $: userAssets = $userData;
-
-  async function updateAssetPrice() {
-    const req = await fetch("/api");
-    if (req.ok) {
-      const res = await req.json();
-
-      $userData.forEach((asset) => {
-        const price = res.find((item) => item.symbol === asset.symbol);
-        if (price) asset.price = price.price;
-      });
-    }
-  }
-
-  function sumTotalAmount() {
-    const total = userAssets.reduce((acc, cur) => {
-      return acc + cur.amount * cur.price;
-    }, 0);
-
-    return total;
-  }
-
-  onMount(async () => {
-    await updateAssetPrice();
-    sumTotalAmount();
-  });
+  let selectedAsset;
 </script>
 
 <svelte:head>
@@ -40,12 +15,12 @@
 </svelte:head>
 
 <div class="view col fill">
-  <Total amount={sumTotalAmount()} />
+  <Total />
 
   <div class="scroll">
     <ul class="col acenter xfill">
       {#each userAssets as asset}
-        <li class="xfill">
+        <li class="xfill" on:click={() => (selectedAsset = asset)}>
           <Card data={asset} />
         </li>
       {/each}
@@ -53,7 +28,7 @@
   </div>
 
   <div class="add-wrapper row jcenter xfill">
-    <Add />
+    <Add bind:selectedAsset />
   </div>
 </div>
 
