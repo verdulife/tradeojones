@@ -106,28 +106,43 @@
     border-bottom-right-radius: 18px 15px;
   }
 
-  .outer,
-  .modal {
+  .outer {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-  }
-
-  .outer {
     height: 100%;
-    background: rgba(#000, 0.1);
-    backdrop-filter: blur(2px);
+    background: rgba(#0d0e1f, 0.2);
   }
 
   .modal {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    width: calc(100% - 20px);
     height: auto;
-    background: $white;
-    border-top-left-radius: 15px 20px;
-    border-top-right-radius: 15px 20px;
-    border-bottom-left-radius: 15px 20px;
-    border-bottom-right-radius: 15px 20px;
+    background: rgba(#0d0e1f, 0.5);
+    mask-image: paint(squircle);
+    --squircle-radius: 40px;
+    --squircle-smooth: 0.7;
+    backdrop-filter: blur(5px);
+    color: $bg;
     padding: 20px;
+
+    &:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(-10deg, rgba(#fff, 0.1) 50%, rgba(#fff, 0.3));
+      mask-image: paint(squircle);
+      --squircle-radius: 40px;
+      --squircle-smooth: 0.7;
+      --squircle-outline: 1px;
+      z-index: -1;
+    }
 
     .input-wrapper {
       margin-bottom: 40px;
