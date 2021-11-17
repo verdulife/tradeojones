@@ -32,13 +32,15 @@
   header {
     color: $bg;
     box-shadow: 0 10px 50px 0 rgba(#000, 0.5);
-    padding: 10px 20px;
+    padding: 20px;
 
     h1 {
+      font-size: 40px;
       font-weight: lighter;
     }
 
     small {
+      color: $pri;
       font-weight: bold;
     }
   }

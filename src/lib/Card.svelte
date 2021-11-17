@@ -28,15 +28,30 @@
 
 <style lang="scss">
   .card {
+    position: relative;
     color: $pri;
-    background: rgba(#000, 0.2);
-    border: 1px solid rgba($border, 0.05);
-    border-top-left-radius: 18px 15px;
-    border-top-right-radius: 18px 15px;
-    border-bottom-left-radius: 18px 15px;
-    border-bottom-right-radius: 18px 15px;
+    background: rgba(#0d0e1f, 0.5);
+    mask-image: paint(squircle);
+    --squircle-radius: 10px;
+    --squircle-smooth: 0.4;
+    backdrop-filter: blur(5px);
     margin-bottom: 5px;
     padding: 15px;
+
+    &:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(-10deg, rgba(#fff, 0.05) 50%, rgba(#fff, 0.1));
+      mask-image: paint(squircle);
+      --squircle-radius: 10px;
+      --squircle-smooth: 0.4;
+      --squircle-outline: 1px;
+      z-index: -1;
+    }
 
     .logo {
       width: 40px;
@@ -58,6 +73,11 @@
 
     p {
       font-size: 12px;
+
+      &:first-of-type {
+        font-size: 14px;
+        font-weight: bold;
+      }
     }
   }
 </style>
