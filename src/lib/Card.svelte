@@ -1,5 +1,5 @@
 <script>
-  import { currencyFormat, cryptoFormat } from "$lib/utils";
+  import { currencyFormat, cryptoValueFormat, cryptoFormat } from "$lib/utils";
 
   export let data = {
     img: "",
@@ -17,7 +17,7 @@
 
   <div class="col grow">
     <h2>{data.name}</h2>
-    <small>{currencyFormat(data.price, "USD")}</small>
+    <small>{cryptoValueFormat(data.price, "USD")}</small>
   </div>
 
   <div class="col aend grow">

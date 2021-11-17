@@ -9,6 +9,7 @@
   let cryptos = [];
   let asset = {};
   let userAmount = undefined;
+  let isUpdate = false;
 
   $: if (selectedAsset) {
     togModal(selectedAsset);
@@ -25,6 +26,7 @@
       modal = false;
       asset = {};
       userAmount = undefined;
+      isUpdate = false;
       return;
     }
 
@@ -32,7 +34,9 @@
       cryptos = await getCryptosList();
     }
 
-    if (data) {
+    if (data.symbol) {
+      isUpdate = true;
+
       asset = {
         img: data.img,
         name: data.name,
@@ -47,16 +51,50 @@
   }
 
   function addAsset() {
+    if (!asset.symbol) {
+      alert(ui.alert_no_asset_selected);
+      return;
+    }
+
     const newAsset = {
       img: asset.img,
       name: asset.name,
       symbol: asset.symbol,
       price: asset.price,
-      amount: userAmount,
+      amount: userAmount || 0,
     };
 
-    $userData = [...$userData, newAsset];
+    const toUpdate = $userData.find((item) => item.symbol === newAsset.symbol);
+
+    if (toUpdate) {
+      $userData[$userData.indexOf(toUpdate)] = newAsset;
+    } else {
+      $userData = [...$userData, newAsset];
+    }
+
     togModal();
+  }
+
+  function removeAsset() {
+    //todo apply results to localstorage
+    const toRemove = $userData.find((item) => item.symbol === selectedAsset.symbol);
+
+    if (toRemove) {
+      $userData.splice($userData.indexOf(toRemove), 1);
+      $userData = $userData;
+    }
+
+    togModal();
+  }
+
+  async function updatePrices() {
+    const icon = document.querySelector(".update-icon");
+    icon.classList.add("updating");
+    cryptos = await getCryptosList();
+
+    setTimeout(() => {
+      icon.classList.remove("updating");
+    }, 1000);
   }
 </script>
 
@@ -66,12 +104,11 @@
     <p>{ui.icon_add_label}</p>
   </div>
 
-  <div class="tool row fcenter grow">
-    <img src="/update.svg" alt="Update values" />
+  <div class="tool row fcenter grow" on:click={updatePrices}>
+    <img class="update-icon" src="/update.svg" alt="Update values" />
     <p>{ui.icon_update_label}</p>
   </div>
 </div>
-<!-- <button on:click={togModal}>{ui.label}</button> -->
 
 {#if modal}
   <div class="outer" on:click={togModal} />
@@ -97,15 +134,23 @@
             class="xfill"
             id="amount"
             type="number"
-            step="0.00000001"
-            placeholder="0.00000001"
+            step="0.000000001"
+            placeholder="0.000000001"
             autocomplete="off"
             bind:value={userAmount}
           />
         </div>
       </div>
 
-      <button class="sec" on:click={addAsset}>ADD ASSET</button>
+      <div class="row jcenter xfill">
+        <button class="sec" on:click={addAsset}>
+          {isUpdate === false ? ui.button_update_label : ui.button_add_label}
+        </button>
+
+        {#if isUpdate}
+          <span class="remove-btn" on:click={removeAsset}>🗑️</span>
+        {/if}
+      </div>
     </div>
   </div>
 {/if}
@@ -145,6 +190,10 @@
         object-fit: contain;
         filter: invert(1);
         margin-right: 10px;
+      }
+
+      .updating {
+        animation: 1s spin;
       }
 
       p {
@@ -234,11 +283,26 @@
 
     button {
       width: 75%;
+      height: 50px;
       background: $sec;
       color: $white;
       mask-image: paint(squircle);
       --squircle-radius: 10px;
       --squircle-smooth: 0.4;
+    }
+
+    .remove-btn {
+      font-size: 22px;
+      padding: 10px 20px;
+    }
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
     }
   }
 </style>
