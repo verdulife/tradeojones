@@ -1,5 +1,5 @@
 const API = {
-  URI: "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest",
+  URI: "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?limit=5000",
   KEY: "eaff8e50-6cf4-47ba-8ae1-6ccc0ae7d8d2",
   HEADER: "X-CMC_PRO_API_KEY",
 };

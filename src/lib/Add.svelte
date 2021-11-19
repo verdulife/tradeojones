@@ -16,7 +16,6 @@
   }
 
   async function getCryptosList() {
-    //todo delete assets that user already have
     const req = await fetch("/api");
     if (req.ok) return await req.json();
   }
