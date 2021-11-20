@@ -23,7 +23,7 @@
         });
       }
 
-      $apiCalls += 1;
+      $apiCalls = parseInt($apiCalls) + 1;
       return data;
     }
   }
@@ -72,12 +72,17 @@
       return;
     }
 
+    if (!userAmount) {
+      alert(ui.alert_no_amount_selected);
+      return;
+    }
+
     const newAsset = {
       img: asset.img,
       name: asset.name,
       symbol: asset.symbol,
       price: asset.price,
-      amount: userAmount || 0,
+      amount: userAmount,
     };
 
     const toUpdate = $userData.find((item) => item.symbol === newAsset.symbol);
@@ -135,7 +140,7 @@
       <div class="input-wrapper col xfill">
         <label class="xfill" for="autocomplete">{ui.autocomplete_label}</label>
         {#await cryptos}
-          <div class="loading-wrapper row fcenter xfill">
+          <div class="loading-wrapper row acenter xfill">
             <img src="/loading.svg" alt={ui.loading_alt} />
             <p>{ui.loading_text}</p>
           </div>
@@ -144,7 +149,7 @@
             items={assets}
             bind:selectedItem={asset}
             labelFieldName="name"
-            keywordsFieldName="name"
+            keywordsFunction={(a) => `${a.name} (${a.symbol})`}
             placeholder={ui.autocomplete_placeholder}
             noResultsText={ui.autocomplete_noresults}
             hideArrow
@@ -234,14 +239,16 @@
   .modal {
     position: fixed;
     bottom: 10px;
-    left: 10px;
+    left: auto;
+    right: auto;
     width: calc(100% - 20px);
+    max-width: 500px;
     height: auto;
-    background: rgba(#0d0e1f, 0.5);
+    background: rgba(#0d0e1f, 0.75);
     mask-image: paint(squircle);
     --squircle-radius: 20px;
     --squircle-smooth: 0.4;
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(10px);
     color: $bg;
     padding: 30px 20px;
 
@@ -266,8 +273,7 @@
       mask-image: paint(squircle);
       --squircle-radius: 10px;
       --squircle-smooth: 0.4;
-      padding: 10px 20px;
-      margin-bottom: 20px;
+      padding: 0.9em 1em;
 
       &:before {
         content: "";
@@ -285,14 +291,13 @@
       }
 
       img {
-        width: 30px;
-        height: 30px;
+        width: 20px;
+        height: 20px;
         object-fit: contain;
         margin-right: 10px;
       }
 
       p {
-        font-size: 12px;
         color: $pri;
       }
     }

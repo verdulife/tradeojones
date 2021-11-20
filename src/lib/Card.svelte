@@ -29,6 +29,7 @@
 <style lang="scss">
   .card {
     position: relative;
+    max-width: 500px;
     color: $pri;
     background: rgba(#0d0e1f, 0.5);
     mask-image: paint(squircle);

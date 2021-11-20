@@ -20,7 +20,7 @@
   <div class="scroll">
     <ul class="col acenter xfill">
       {#each userAssets as asset}
-        <li class="xfill" on:click={() => (selectedAsset = asset)}>
+        <li class="row jcenter xfill" on:click={() => (selectedAsset = asset)}>
           <Card data={asset} />
         </li>
       {/each}
