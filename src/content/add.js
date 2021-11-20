@@ -9,4 +9,7 @@ export const ui = {
   autocomplete_noresults: "No results found",
   amount_label: "Amount",
   alert_no_asset_selected: "Please select an asset",
+  loading_alt: "Loading...",
+  loading_text: "Loading assets...",
+  alert_remove_asset: "Are you sure you want to remove this asset?",
 }

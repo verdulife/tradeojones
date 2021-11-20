@@ -5,19 +5,36 @@
   import AutoComplete from "simple-svelte-autocomplete";
 
   export let selectedAsset;
-  let modal = false;
-  let cryptos = [];
-  let asset = {};
-  let userAmount = undefined;
-  let isUpdate = false;
-
-  $: if (selectedAsset) {
-    togModal(selectedAsset);
-  }
 
   async function getCryptosList() {
     const req = await fetch("/api");
-    if (req.ok) return await req.json();
+    if (req.ok) {
+      const data = await req.json();
+
+      if ($userData.length > 0) {
+        $userData.forEach((local_asset) => {
+          data.forEach((api_asset) => {
+            if (local_asset.symbol === api_asset.symbol) {
+              local_asset.price = api_asset.price;
+              $userData = $userData;
+            }
+          });
+        });
+      }
+
+      return data;
+    }
+  }
+
+  let modal = false;
+  let cryptos = getCryptosList() || [];
+  let asset = {};
+  let userAmount = undefined;
+  let isUpdate = false;
+  let updating = false;
+
+  $: if (selectedAsset) {
+    togModal(selectedAsset);
   }
 
   async function togModal(data) {
@@ -27,10 +44,6 @@
       userAmount = undefined;
       isUpdate = false;
       return;
-    }
-
-    if (cryptos.length === 0) {
-      cryptos = await getCryptosList();
     }
 
     if (data.symbol) {
@@ -75,25 +88,27 @@
   }
 
   function removeAsset() {
-    //todo apply results to localstorage
-    const toRemove = $userData.find((item) => item.symbol === selectedAsset.symbol);
+    const check = confirm(ui.alert_remove_asset);
 
-    if (toRemove) {
-      $userData.splice($userData.indexOf(toRemove), 1);
-      $userData = $userData;
+    if (check) {
+      const toRemove = $userData.find((item) => item.symbol === selectedAsset.symbol);
+
+      if (toRemove) {
+        $userData.splice($userData.indexOf(toRemove), 1);
+        $userData = $userData;
+      }
+
+      togModal();
     }
-
-    togModal();
   }
 
   async function updatePrices() {
-    const icon = document.querySelector(".update-icon");
-    icon.classList.add("updating");
-    cryptos = await getCryptosList();
+    cryptos = getCryptosList();
+    updating = true;
+  }
 
-    setTimeout(() => {
-      icon.classList.remove("updating");
-    }, 1000);
+  $: if ($userData) {
+    updating = false;
   }
 </script>
 
@@ -104,7 +119,7 @@
   </div>
 
   <div class="tool row fcenter grow" on:click={updatePrices}>
-    <img class="update-icon" src="/update.svg" alt="Update values" />
+    <img class="update-icon {updating ? 'update' : ''}" src="/update.svg" alt="Update values" />
     <p>{ui.icon_update_label}</p>
   </div>
 </div>
@@ -115,15 +130,22 @@
     <div class="col acenter xfill">
       <div class="input-wrapper col xfill">
         <label class="xfill" for="autocomplete">{ui.autocomplete_label}</label>
-        <AutoComplete
-          items={cryptos}
-          bind:selectedItem={asset}
-          labelFieldName="name"
-          keywordsFieldName="name"
-          placeholder={ui.autocomplete_placeholder}
-          noResultsText={ui.autocomplete_noresults}
-          hideArrow
-        />
+        {#await cryptos}
+          <div class="loading-wrapper row fcenter xfill">
+            <img src="/loading.svg" alt={ui.loading_alt} />
+            <p>{ui.loading_text}</p>
+          </div>
+        {:then assets}
+          <AutoComplete
+            items={assets}
+            bind:selectedItem={asset}
+            labelFieldName="name"
+            keywordsFieldName="name"
+            placeholder={ui.autocomplete_placeholder}
+            noResultsText={ui.autocomplete_noresults}
+            hideArrow
+          />
+        {/await}
       </div>
 
       <div class="input-wrapper col xfill">
@@ -191,10 +213,6 @@
         margin-right: 10px;
       }
 
-      .updating {
-        animation: 1s spin;
-      }
-
       p {
         font-size: 10px;
       }
@@ -236,6 +254,43 @@
       --squircle-smooth: 0.4;
       --squircle-outline: 1px;
       z-index: -1;
+    }
+
+    .loading-wrapper {
+      position: relative;
+      background: rgba(#000, 0.2);
+      mask-image: paint(squircle);
+      --squircle-radius: 10px;
+      --squircle-smooth: 0.4;
+      padding: 10px 20px;
+      margin-bottom: 20px;
+
+      &:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(-10deg, rgba(#fff, 0.05) 50%, rgba(#fff, 0.1));
+        mask-image: paint(squircle);
+        --squircle-radius: 10px;
+        --squircle-smooth: 0.4;
+        --squircle-outline: 1px;
+        z-index: -1;
+      }
+
+      img {
+        width: 30px;
+        height: 30px;
+        object-fit: contain;
+        margin-right: 10px;
+      }
+
+      p {
+        font-size: 12px;
+        color: $pri;
+      }
     }
 
     .input-wrapper {
@@ -294,6 +349,10 @@
       font-size: 22px;
       padding: 10px 20px;
     }
+  }
+
+  .update {
+    animation: spin infinite 1s linear;
   }
 
   @keyframes spin {

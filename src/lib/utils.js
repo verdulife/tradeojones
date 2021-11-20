@@ -1,26 +1,11 @@
-export function roundWithTwoDecimals(num) {
-  return Math.round((num + Number.EPSILON) * 100) / 100;
-}
-
-export function numerationFormat(num, year) {
-  const length = `${num}`.length;
-  const prefix = year.toString().slice(-2);
-
-  if (length === 1) return `${prefix}-0000${num}`;
-  if (length === 2) return `${prefix}-000${num}`;
-  if (length === 3) return `${prefix}-00${num}`;
-  if (length === 4) return `${prefix}-0${num}`;
-  return `${prefix}-${num}`;
-}
-
 export function currencyFormat(num, currency) {
   return num.toLocaleString('en-US', { style: 'currency', currency, minimumFractionDigits: 2 });
 }
 
 export function cryptoValueFormat(num, currency) {
-  return num.toLocaleString('en-US', { style: 'currency', currency, minimumFractionDigits: 2, maximumFractionDigits: 9 });
+  return num.toLocaleString('en-US', { style: 'currency', currency, minimumFractionDigits: 2, maximumFractionDigits: 12 });
 }
 
 export function cryptoFormat(num, currency) {
-  return num.toLocaleString('en-US', { style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 9 }) + ' ' + currency;
+  return num.toLocaleString('en-US', { style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 12 }) + ' ' + currency;
 }

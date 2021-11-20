@@ -1,6 +1,6 @@
 <script>
   import { ui } from "$content/home";
-  import { userData, cryptosList } from "../stores";
+  import { userData } from "../stores";
   import Total from "$lib/Total.svelte";
   import Card from "$lib/Card.svelte";
   import Add from "$lib/Add.svelte";

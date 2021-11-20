@@ -1,45 +1,15 @@
-<script context="module">
-  export async function load({ fetch }) {
-    const req = await fetch("/api");
-
-    if (req.ok) {
-      return {
-        props: {
-          data: await req.json(),
-        },
-      };
-    } else {
-      return {
-        props: {
-          data: {
-            error: true,
-          },
-        },
-      };
-    }
-  }
-</script>
-
 <script>
   import Nav from "$lib/Nav.svelte";
   import "$fonts/circular.css";
   import "$fonts/operator.css";
-  import { navigating } from "$app/stores";
-
-  export let data;
-  console.log(data);
 </script>
 
 <main>
   <Nav />
 
-  {#if $navigating}
-    <img width="200" height="200" src="/loading.svg" alt="Loading" />
-  {:else}
-    <div class="view fill">
-      <slot />
-    </div>
-  {/if}
+  <div class="view fill">
+    <slot />
+  </div>
 </main>
 
 <style lang="scss">
