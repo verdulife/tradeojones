@@ -1,6 +1,6 @@
 <script>
   import { ui } from "$content/add";
-  import { userData } from "../stores";
+  import { userData, apiCalls } from "../stores";
   import { slide } from "svelte/transition";
   import AutoComplete from "simple-svelte-autocomplete";
 
@@ -8,6 +8,7 @@
 
   async function getCryptosList() {
     const req = await fetch("/api");
+
     if (req.ok) {
       const data = await req.json();
 
@@ -22,12 +23,13 @@
         });
       }
 
+      $apiCalls += 1;
       return data;
     }
   }
 
   let modal = false;
-  let cryptos = getCryptosList() || [];
+  let cryptos;
   let asset = {};
   let userAmount = undefined;
   let isUpdate = false;
@@ -37,7 +39,7 @@
     togModal(selectedAsset);
   }
 
-  async function togModal(data) {
+  function togModal(data) {
     if (modal) {
       modal = false;
       asset = {};
@@ -45,6 +47,8 @@
       isUpdate = false;
       return;
     }
+
+    cryptos = cryptos || getCryptosList();
 
     if (data.symbol) {
       isUpdate = true;
